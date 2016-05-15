@@ -4,6 +4,8 @@ import exceptions.TransactionNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -65,7 +67,7 @@ public class TransactionDbTest {
     }
 
     @Test
-    public void getTransaction_withoneTransaction_1() {
+    public void getTransactionById_withoneTransaction_1() {
         //given
         Transaction transaction = new Transaction(1.0,345.0, "shopping");
         transactionDb.putTransaction(transaction);
@@ -79,7 +81,38 @@ public class TransactionDbTest {
 
 
     @Test(expected= TransactionNotFoundException.class)
-    public void getTransaction_withoutTransaction_throwError() {
+    public void getTransactionById_withoutTransaction_throwError() {
         transactionDb.getTransaction(1.0);
+    }
+
+
+    @Test
+    public void getTransactionByType_withNoTransactionOfTheType_0() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,346.0, "car"));
+
+        //when
+        List<Double> results = transactionDb.getTransaction("housing");
+
+        //then
+        assertThat(results).isEmpty();
+    }
+
+
+    @Test
+    public void getTransactionByType_withTransaction_0() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,346.0, "car"));
+        transactionDb.putTransaction(new Transaction(3.0,347.0, "shopping"));
+
+
+        //when
+        List<Double> results = transactionDb.getTransaction("shopping");
+
+        //then
+        assertThat(results).hasSize(2);
+        assertThat(results).contains(1.0, 3.0);
     }
 }
