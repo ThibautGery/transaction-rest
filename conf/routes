@@ -3,3 +3,9 @@
 # ~~~~
 
 GET     /api/ping                    controllers.SystemController.ping
+
+
+GET     /                           controllers.DocumentationController.index
+
+
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

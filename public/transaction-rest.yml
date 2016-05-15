@@ -1,0 +1,156 @@
+swagger: '2.0'
+info:
+  title: Transaction REST
+  description: System to store transactions
+  version: 1.0.0
+basePath: /api
+schemes:
+  - http
+produces:
+  - application/json
+paths:
+  /transactions/{transaction_id}:
+    put:
+      summary: Add a transation
+      parameters:
+        - name: transaction_id
+          in: path
+          description: Transaction's ID
+          required: true
+          type: number
+          format: double
+        - name: transaction
+          in: body
+          description: transaction to add or update
+          required: true
+          schema:
+            $ref: '#/definitions/Transaction'
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: A transaction
+          schema:
+            $ref: '#/definitions/Transaction'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: Get a transation
+      parameters:
+        - name: transaction_id
+          in: path
+          description: Transaction's ID
+          required: true
+          type: number
+          format: double
+
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: A transaction
+          schema:
+            $ref: '#/definitions/Transaction'
+        '404':
+          description: The transaction was not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /types/{type}:
+    get:
+      summary: Get the transations of a certain type
+      parameters:
+        - name: type
+          in: path
+          description: type name
+          required: true
+          type: string
+
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: List of the ids
+          schema:
+            type: array
+            items:
+              type: number
+              format: double
+        
+        '404':
+          description: The transaction was not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /sum/{transaction_id}:
+    get:
+      summary: Get the sum of all the linked transaction
+      parameters:
+        - name: transaction_id
+          in: path
+          description: transaction_id
+          required: true
+          type: string
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: List of the ids
+          schema:
+            type: object
+            properties:
+              sum:
+                type: number
+                format: double
+        
+        '404':
+          description: No transactions found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /ping:
+    get:
+      summary: check if the service is running
+      tags:
+        - System
+      responses:
+        '200':
+          description: Un
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+
+definitions:
+  Transaction:
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      type:
+        type: string
+      parent_id:
+        type: number
+        format: double
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+      error:
+        type: string
