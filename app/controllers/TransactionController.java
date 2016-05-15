@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,20 @@ public class TransactionController extends Controller {
             ex.printStackTrace();
             return badRequest(Json.toJson(ex.getMessage()));
         } catch (Exception ex) {
+            ex.printStackTrace();
+            return internalServerError(Json.toJson(ex.getMessage()));
+        }
+
+    }
+
+    public Result getTransaction(Double id) {
+        try {
+            Optional<Transaction> transaction = transactionDb.getTransaction(id);
+            if(!transaction.isPresent()) {
+                return notFound(Json.toJson("The transaction was not found"));
+            }
+            return ok(Json.toJson(transaction.get()));
+        }  catch (Exception ex) {
             ex.printStackTrace();
             return internalServerError(Json.toJson(ex.getMessage()));
         }

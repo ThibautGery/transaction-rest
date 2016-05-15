@@ -24,6 +24,7 @@ import java.util.concurrent.CompletionStage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.NOT_FOUND;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.running;
@@ -121,6 +122,42 @@ public class TransactionControllerTest extends WithServer {
         Optional<Transaction> transaction = transactionDb.getTransaction(34.0);
         assertThat(transaction.isPresent()).isTrue();
         assertThat(transaction.get().getAmount()).isEqualTo(456.0);
+    }
+
+
+    @Test
+    public void getTransaction_existingInDb_200() throws Exception {
+        //given
+        WSClient ws = WS.newClient(port);
+        Transaction transaction = new Transaction(12.0, 456.89, "shopping");
+        transactionDb.putTransaction(transaction);
+
+        //when
+        CompletionStage<WSResponse> completionStage = ws.url("/api/transactions/12").get();
+        WSResponse response = completionStage.toCompletableFuture().get();
+        ws.close();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(OK);
+        assertThat(response.getHeader("content-type")).startsWith("application/json");
+        assertThat(response.asJson()).isEqualTo(Json.toJson(transaction));
+    }
+
+    @Test
+    public void getTransaction_notExistingInDb_404() throws Exception {
+        //given
+        WSClient ws = WS.newClient(port);
+        Transaction transaction = new Transaction(12.0, 456.89, "shopping");
+        transactionDb.putTransaction(transaction);
+
+        //when
+        CompletionStage<WSResponse> completionStage = ws.url("/api/transactions/13").get();
+        WSResponse response = completionStage.toCompletableFuture().get();
+        ws.close();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(NOT_FOUND);
+        assertThat(response.getHeader("content-type")).startsWith("application/json");
     }
 
 

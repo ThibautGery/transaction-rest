@@ -4,6 +4,7 @@
 
 GET     /api/ping                   controllers.SystemController.ping
 
+GET     /api/transactions/:id        controllers.TransactionController.getTransaction(id: Double)
 PUT     /api/transactions/:id        controllers.TransactionController.putTransaction(id: Double)
 
 
