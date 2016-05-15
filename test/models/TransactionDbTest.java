@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.TransactionNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,5 +62,24 @@ public class TransactionDbTest {
         assertThat(transactionDb.transactions).hasSize(1);
         assertThat(transactionDb.transactions)
                 .containsValues(new Transaction(1.0, 346.0, "cars"));
+    }
+
+    @Test
+    public void getTransaction_withoneTransaction_1() {
+        //given
+        Transaction transaction = new Transaction(1.0,345.0, "shopping");
+        transactionDb.putTransaction(transaction);
+
+        //when
+        Transaction result = transactionDb.getTransaction(1.0);
+
+        //then
+        assertThat(result).isEqualTo(transaction);
+    }
+
+
+    @Test(expected= TransactionNotFoundException.class)
+    public void getTransaction_withoutTransaction_throwError() {
+        transactionDb.getTransaction(1.0);
     }
 }
