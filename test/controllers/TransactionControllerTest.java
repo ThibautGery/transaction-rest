@@ -3,6 +3,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Transaction;
@@ -160,5 +161,25 @@ public class TransactionControllerTest extends WithServer {
         assertThat(response.getHeader("content-type")).startsWith("application/json");
     }
 
+    @Test
+    public void getTransactionByType_existingInDb_200() throws Exception {
+        //given
+        WSClient ws = WS.newClient(port);
+        transactionDb.putTransaction(new Transaction(12.0, 456.89, "shopping"));
+        transactionDb.putTransaction(new Transaction(13.0, 456.89, "housing"));
+        transactionDb.putTransaction(new Transaction(14.0, 456.89, "shopping"));
 
+        //when
+        CompletionStage<WSResponse> completionStage = ws.url("/api/types/shopping").get();
+        WSResponse response = completionStage.toCompletableFuture().get();
+        ws.close();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(OK);
+        assertThat(response.getHeader("content-type")).startsWith("application/json");
+        ArrayNode expectedResults = Json.newArray();
+        expectedResults.add(12.0);
+        expectedResults.add(14.0);
+        assertThat(response.asJson()).isEqualTo(expectedResults);
+    }
 }

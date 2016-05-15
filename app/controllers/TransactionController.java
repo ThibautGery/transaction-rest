@@ -69,7 +69,17 @@ public class TransactionController extends Controller {
             ex.printStackTrace();
             return internalServerError(Json.toJson(ex.getMessage()));
         }
+    }
 
+
+    public Result getTransactionByType(String type) {
+        try {
+            List<Double> transactionsId = transactionDb.getTransaction(type);
+            return ok(Json.toJson(transactionsId));
+        }  catch (Exception ex) {
+            ex.printStackTrace();
+            return internalServerError(Json.toJson(ex.getMessage()));
+        }
     }
 
 }
