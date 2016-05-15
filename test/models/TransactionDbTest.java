@@ -1,10 +1,10 @@
 package models;
 
-import exceptions.TransactionNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +34,7 @@ public class TransactionDbTest {
     }
 
     @Test
-    public void addTransaction_twodifferentTransactions_2() {
+    public void addTransaction_twoDifferentTransactions_2() {
         //given
         Transaction transaction1 = new Transaction(1.0,345.0, "shopping");
         Transaction transaction2 = new Transaction(2.0,346.0, "cars");
@@ -73,16 +73,20 @@ public class TransactionDbTest {
         transactionDb.putTransaction(transaction);
 
         //when
-        Transaction result = transactionDb.getTransaction(1.0);
+        Optional<Transaction> result = transactionDb.getTransaction(1.0);
 
         //then
-        assertThat(result).isEqualTo(transaction);
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(transaction);
     }
 
+    @Test
+    public void getTransactionById_withoutTransaction_returnEmptyOption() {
+        //when
+        Optional<Transaction> result = transactionDb.getTransaction(1.0);
 
-    @Test(expected= TransactionNotFoundException.class)
-    public void getTransactionById_withoutTransaction_throwError() {
-        transactionDb.getTransaction(1.0);
+        //then
+        assertThat(result.isPresent()).isFalse();
     }
 
 

@@ -1,10 +1,10 @@
 package models;
 
 
-import exceptions.TransactionNotFoundException;
-
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 final public class TransactionDb {
     protected Map<Double,Transaction> transactions;
@@ -17,11 +17,8 @@ final public class TransactionDb {
         transactions.put(transaction.getId(), transaction);
     }
 
-    public Transaction getTransaction(Double id) {
-        Transaction transaction = transactions.get(id);
-        if(transaction == null)
-            throw new TransactionNotFoundException();
-        return transaction;
+    public Optional<Transaction> getTransaction(Double id) {
+        return ofNullable(transactions.get(id));
     }
 
     public List<Double> getTransaction(String type) {
