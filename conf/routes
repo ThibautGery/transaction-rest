@@ -2,7 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /api/ping                    controllers.SystemController.ping
+GET     /api/ping                   controllers.SystemController.ping
+
+PUT     /api/transactions/:id        controllers.TransactionController.putTransaction(id: Double)
 
 
 GET     /                           controllers.DocumentationController.index

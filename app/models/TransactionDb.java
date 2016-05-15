@@ -1,11 +1,13 @@
 package models;
 
 
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
+@Singleton
 final public class TransactionDb {
     protected Map<Double,Transaction> transactions;
 
@@ -15,6 +17,7 @@ final public class TransactionDb {
 
     public void putTransaction(Transaction transaction) {
         transactions.put(transaction.getId(), transaction);
+
     }
 
     public Optional<Transaction> getTransaction(Double id) {

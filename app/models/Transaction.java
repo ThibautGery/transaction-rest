@@ -1,11 +1,23 @@
 package models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import play.data.validation.Constraints;
+
 public class Transaction {
+    @Constraints.Required
     private Double _id;
+
     private Double parent_id;
+
+    @Constraints.Required
     private Double amount;
+
+    @Constraints.Required
     private String type;
+
+    public Transaction() {
+    }
 
     public Transaction(Double amount, String type) {
         this.amount = amount;
@@ -17,13 +29,38 @@ public class Transaction {
         this.amount = amount;
         this.type = type;
     }
-
+    @JsonIgnore
     public Double getId() {
         return _id;
     }
 
     public String getType() {
         return type;
+    }
+
+    public Double getParent_id() {
+        return parent_id;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    @JsonIgnore
+    public void setId(Double id) {
+        this._id = id;
+    }
+
+    public void setParent_id(Double parent_id) {
+        this.parent_id = parent_id;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

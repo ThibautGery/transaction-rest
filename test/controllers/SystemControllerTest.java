@@ -1,3 +1,5 @@
+package controllers;
+
 import org.junit.*;
 
 import play.libs.ws.*;
@@ -11,7 +13,7 @@ import play.libs.Json;
 
 
 
-public class IntegrationTest {
+public class SystemControllerTest {
 
 
     @Test
