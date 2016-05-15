@@ -7,7 +7,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  javaWs
+  javaWs % "test",
+  "org.assertj" % "assertj-core" % "3.4.1"
 )
-
-libraryDependencies += "org.assertj" % "assertj-core" % "3.4.1"
