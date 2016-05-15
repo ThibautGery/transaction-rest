@@ -1,4 +1,6 @@
 # Transaction-rest
+[![CircleCI](https://circleci.com/gh/ThibautGery/transaction-rest.svg?style=svg)](https://circleci.com/gh/ThibautGery/transaction-rest)
+
 A RESTful web service that stores some transactions
 
 
