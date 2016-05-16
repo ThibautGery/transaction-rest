@@ -4,8 +4,6 @@ info:
   description: System to store transactions
   version: 1.0.0
 basePath: /api
-schemes:
-  - http
 produces:
   - application/json
 paths:
