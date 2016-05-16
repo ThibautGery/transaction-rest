@@ -37,15 +37,22 @@ final public class TransactionDb {
         Optional<Double> idToCheck = ofNullable(id);
         while(idToCheck.isPresent()) {
             Optional<Transaction> currentOpt = getTransaction(idToCheck.get());
+            idToCheck = empty();
             if(currentOpt.isPresent()) {
                 Transaction current = currentOpt.get();
-                idToCheck = ofNullable(current.getParent_id());
                 result.add(current);
-            } else {
-                idToCheck = empty();
+                if(!isParentInArray(result, current)) {
+                    idToCheck = ofNullable(current.getParent_id());
+                }
             }
         }
         return result;
+    }
+
+    private boolean isParentInArray(List<Transaction> transactions, Transaction current) {
+        return transactions.stream()
+                .anyMatch(t -> t.getId() != null
+                        && t.getId().equals(current.getParent_id()));
     }
 
 }

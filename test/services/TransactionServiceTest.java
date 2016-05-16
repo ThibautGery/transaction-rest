@@ -31,9 +31,25 @@ public class TransactionServiceTest extends WithApplication {
     }
 
     @Test
-    public void sum_4Transaction_0() {
+    public void sum_4Transactions_4() {
         //given
         transactionDb.putTransaction(new Transaction(1.0,0.1, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,1.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(3.0,10.0, "shopping", 4.0));
+        transactionDb.putTransaction(new Transaction(4.0,100.0, "shopping", 1.0));
+        transactionDb.putTransaction(new Transaction(5.0,1000.0, "shopping", 3.0));
+
+        //when
+        Double result = transactionService.sum(5.0);
+
+        //then
+        assertThat(result).isEqualTo(1110.1);
+    }
+
+    @Test(timeout=1000)
+    public void sum_4cyclicTransactions_4() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,0.1, "shopping", 5.0));
         transactionDb.putTransaction(new Transaction(2.0,1.0, "shopping"));
         transactionDb.putTransaction(new Transaction(3.0,10.0, "shopping", 4.0));
         transactionDb.putTransaction(new Transaction(4.0,100.0, "shopping", 1.0));
