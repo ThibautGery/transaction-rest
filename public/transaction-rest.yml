@@ -101,18 +101,10 @@ paths:
         - Transaction
       responses:
         '200':
-          description: List of the ids
+          description: Sum of all the transactions
           schema:
-            type: object
-            properties:
-              sum:
-                type: number
-                format: double
-        
-        '404':
-          description: No transactions found
-          schema:
-            $ref: '#/definitions/Error'
+            type: number
+            format: double
         default:
           description: Unexpected error
           schema:
