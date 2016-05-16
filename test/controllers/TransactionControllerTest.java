@@ -182,4 +182,26 @@ public class TransactionControllerTest extends WithServer {
         expectedResults.add(14.0);
         assertThat(response.asJson()).isEqualTo(expectedResults);
     }
+
+    @Test
+    public void getSum_existingInDb_returnSum() throws Exception {
+        //given
+        WSClient ws = WS.newClient(port);
+        transactionDb.putTransaction(new Transaction(1.0,0.1, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,1.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(3.0,10.0, "shopping", 4.0));
+        transactionDb.putTransaction(new Transaction(4.0,100.0, "shopping", 1.0));
+        transactionDb.putTransaction(new Transaction(5.0,1000.0, "shopping", 3.0));
+
+        //when
+        CompletionStage<WSResponse> completionStage = ws.url("/api/sum/5").get();
+        WSResponse response = completionStage.toCompletableFuture().get();
+        ws.close();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(OK);
+        assertThat(response.getHeader("content-type")).startsWith("application/json");
+
+        assertThat(response.asJson()).isEqualTo(Json.toJson(1110.1));
+    }
 }

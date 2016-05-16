@@ -7,6 +7,7 @@ GET     /api/ping                   controllers.SystemController.ping
 GET     /api/transactions/:id       controllers.TransactionController.getTransaction(id: Double)
 GET     /api/types/:name            controllers.TransactionController.getTransactionByType(name: String)
 PUT     /api/transactions/:id       controllers.TransactionController.putTransaction(id: Double)
+GET     /api/sum/:id                controllers.TransactionController.getSum(id: Double)
 
 
 GET     /                           controllers.DocumentationController.index

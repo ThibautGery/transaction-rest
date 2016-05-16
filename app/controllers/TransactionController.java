@@ -9,6 +9,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.TransactionService;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -25,6 +26,9 @@ public class TransactionController extends Controller {
 
     @Inject
     private TransactionDb transactionDb;
+
+    @Inject
+    private TransactionService transactionService;
 
     @Inject
     private Validator validator;
@@ -76,6 +80,16 @@ public class TransactionController extends Controller {
         try {
             List<Double> transactionsId = transactionDb.getTransaction(type);
             return ok(Json.toJson(transactionsId));
+        }  catch (Exception ex) {
+            ex.printStackTrace();
+            return internalServerError(Json.toJson(ex.getMessage()));
+        }
+    }
+
+    public Result getSum(Double id) {
+        try {
+            Double result = transactionService.sum(id);
+            return ok(Json.toJson(result));
         }  catch (Exception ex) {
             ex.printStackTrace();
             return internalServerError(Json.toJson(ex.getMessage()));
