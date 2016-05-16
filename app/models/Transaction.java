@@ -29,6 +29,13 @@ public class Transaction {
         this.amount = amount;
         this.type = type;
     }
+
+    public Transaction(Double id, Double amount, String type, Double parent_id) {
+        this._id = id;
+        this.amount = amount;
+        this.type = type;
+        this.parent_id = parent_id;
+    }
     @JsonIgnore
     public Double getId() {
         return _id;

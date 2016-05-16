@@ -117,4 +117,68 @@ public class TransactionDbTest {
         assertThat(results).hasSize(2);
         assertThat(results).contains(1.0, 3.0);
     }
+
+    @Test
+    public void getLinkedTransactions_noTransaction_0() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+
+        //when
+        List<Transaction> results = transactionDb.getLinkedTransaction(3.0);
+
+        //then
+        assertThat(results).hasSize(0);
+    }
+
+
+    @Test
+    public void getLinkedTransactions_twoDifferentTransaction_1() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(3.0,345.0, "shopping"));
+
+        //when
+        List<Transaction> results = transactionDb.getLinkedTransaction(3.0);
+
+        //then
+        assertThat(results).hasSize(1);
+        assertThat(results).contains(new Transaction(3.0, 345.0, "shopping"));
+    }
+
+    @Test
+    public void getLinkedTransactions_twoLinkedTransaction_2() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,347.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(3.0,348.0, "shopping", 1.0));
+
+        //when
+        List<Transaction> results = transactionDb.getLinkedTransaction(3.0);
+
+        //then
+        assertThat(results).hasSize(2);
+        assertThat(results).contains(new Transaction(3.0,348.0, "shopping", 1.0),
+                                    new Transaction(1.0,345.0, "shopping"));
+    }
+
+    @Test
+    public void getLinkedTransactions_fourLinkedTransaction_4() {
+        //given
+        transactionDb.putTransaction(new Transaction(1.0,345.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(2.0,347.0, "shopping"));
+        transactionDb.putTransaction(new Transaction(3.0,348.0, "shopping", 4.0));
+        transactionDb.putTransaction(new Transaction(4.0,349.0, "shopping", 1.0));
+        transactionDb.putTransaction(new Transaction(5.0,350.0, "shopping", 3.0));
+
+
+        //when
+        List<Transaction> results = transactionDb.getLinkedTransaction(5.0);
+
+        //then
+        assertThat(results).hasSize(4);
+        assertThat(results).contains(new Transaction(3.0,348.0, "shopping", 4.0),
+                new Transaction(4.0,349.0, "shopping", 1.0),
+                new Transaction(5.0,350.0, "shopping", 3.0),
+                new Transaction(1.0,345.0, "shopping"));
+    }
 }
